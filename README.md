@@ -1,14 +1,22 @@
-# Anima-Behaviour-and-Climate-project
-MSc thesis focusing on examining the role of animal behaviour and how it's influenced by various weather parameters, and the function of foundational species in this interaction.
+#Cameratrap Meta
 
-##insall global summary of the day weather package 
-install.packages("GSODR")
+##create PRISMA chart
 
-##open package to work with
-library(GSODR)
+library(PRISMAstatement)
+
+prisma(found = 420,
+       found_other = 0,
+       no_dupes = 397, 
+       screened = 397, 
+       screen_exclusions = 143, 
+       full_text = 254,
+       full_text_exclusions = 0, 
+       qualitative = 254, 
+       quantitative = 0,
+       width = 800, height = 800)
 
 
-##look for carrizo/Bakersfield station number
-get_inventory()
+
+
 
 
