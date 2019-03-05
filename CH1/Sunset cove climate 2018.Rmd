@@ -55,6 +55,8 @@ cor.test(climate$Mean.Wind.Speed, climate$Average.Relative.Humidity, method = "p
 
 #cor coefficient is -0.015, p-value>>0.05
 
+cor.test (climate$Mean.Wind.Speed, climate$Average.Air.Temperature, method="pearson")
+
 
 
 
