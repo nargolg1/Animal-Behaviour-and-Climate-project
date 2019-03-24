@@ -1,11 +1,8 @@
-number ,article title,location,lat long,duration.hours,duration of study,camtrap.days,number of records,animal richness ,animal name,binomial name ,year of study,n.cams,bait (yes/no),month of study,temperature ,notes,mean temp for sampling period ,max temp for sampling period ,,,N.sites,sample.design
-1,"Camera trap, line transect census and track surveys: a comparative evaluation","f Emas National Park, central Brazil","18 190 S, 52 450 W",,,60,,16,,,2002,49,no,,,,,,,,,haphazard
-2,An evaluation of camera traps for inventorying large- and medium-sized terrestrial rainforest mammals,"e Los Amigos Conservation Concession, Peru",121300 –121360 S and 701020 –701090 W,,,30,508,21,,,2005,24,no,,,,,,,,,grid
-,,,,,,30,814,27,,,2006,40,no,,,,,,,,,focal point
-3,Community structure and diversity of tropical forest mammals: data from a global camera trap network,"Bwindi National Park (Uganda), Udzungwa Mountains National Park (Tanzania), Bukit Barisan Selatan National Park (Indonesia), Nam Kading National Protected Area (Lao PDR), Central Suriname Nature Reserve (Suriname), Manaus (Brazil) and Volcan Barva Transect (Costa Rica)",,,,12687-30 days at each site,51000,105,,,2008-2010,60-at each site,no,,,,,,,,,transect 
-4,Disturbance-Mediated Mammal Persistence and Abundance-Area Relationships in Amazonian Forest Fragments,"Alta Floresta, Mato Grosso, Brazil","09?53 S, 56?28 W",,,60,1167,not reported,,,"2003, 2004",,yes,,,,,,,,,
-5,Comparison of the relative efficiencies of stereo-BRUVs and traps for sampling tropical continental shelf demersal fishes,,,,,,,,,,,,,,,,,,,,,
-6,Comparing methods for sampling large- and medium-sized mammals: camera traps and track plots,"Jataí Ecological Station (EEJ) (São Paulo State, Brazil","21°31'15""S–21° 44'24""S; 47°34'42""W–47°52'01""W",,,10,,17,,,06-Jul,10,no,,,,,,,,,
-7,Monitoring the Status and Trends of Tropical Forest Terrestrial Vertebrate Communities from Camera Trap Data: A Tool for Conservation,"‘‘La Selva’’ Biological Station, costa rica",,,,90,22437,26,,,2008-2012,60,,,,,,,,,,
-8,Individual legacy trees influence vertebrate wildlife diversity in commercial forests,,,,,,,,,,,,,,,,,,,,,
-9,"Carnivore mammals in a fragmented landscape in northeast of São Paulo State, Brazil",São Paulo State (Santa Rita do Passa-Quatro and Luiz Antônio municipalities:,21°3115 S–47°3442 W; 21°4424 S–47°5201 W,,,424 (18 months),,10,,,2004-2006,21,,,,,,,,,,
+number ,article.title,location,lat ,long,duration.hours,duration.of.study,camtrap.days,number.of.records,animal.richness ,animal.name,binomial.name ,year,n.cams,bait (yes/no),month.of.study,temperature ,notes,mean.temp.for.sampling.period ,max.temp.for. Sampling. period ,N.sites,sample.design
+,,,,,,,,,,,,,,,,,,,,,haphazard
+,,,,,,,,,,,,,,,,,,,,,grid
+,,,,,,,,,,,,,,,,,,,,,focal point
+,,,,,,,,,,,,,,,,,,,,,transect 
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
+,,,,,,,,,,,,,,,,,,,,,
