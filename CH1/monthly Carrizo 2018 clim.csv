@@ -1,15 +1,15 @@
 Stn Id,Stn Name,CIMIS Region,Month Year,Total ETo (mm),qc,Total Precip (mm),qc,Avg Sol Rad (W/sq.m),qc,Avg Vap Pres (kPa),qc,Avg Max Air Temp (C),qc,Avg Min Air Temp (C),qc,Avg Air Temp (C),qc,Avg Max Rel Hum (%),qc,Avg Min Rel Hum (%),qc,Avg Rel Hum (%),qc,Avg Dew Point (C),qc,Avg Wind Speed (m/s),qc,Avg Soil Temp (C),qc
-88,Cuyama,Central Coast Valleys,Jan-18,55.06,K,0.51,L,111,L,0.9,L,19.6,L,3.6,L,10.9,L,85,L,46,L,64,L,3,L,2,L,11.8,L
-88,Cuyama,Central Coast Valleys,Feb-18,59.33,K,2.29,L,169,L,1,L,14.9,L,-2.2,L,6.8,L,99,L,87,L,94,L,4.7,L,2.5,L,12,L
-88,Cuyama,Central Coast Valleys,Mar-18,97.42,K,12.8,L,222,L,0.9,L,17.6,L,4.2,L,10.6,L,91,L,42,L,66,L,4.4,L,2.4,L,14.5,L
-88,Cuyama,Central Coast Valleys,Apr-18,154.36, ,0, ,287,K,0.8,K,23.7,K,6.1,K,14.5, ,81, ,26, ,49,L,3.6,L,2.5,K,20, 
-88,Cuyama,Central Coast Valleys,May-18,184.64, ,2.2, ,322,K,1, ,26.3, ,7.6, ,16.4, ,86, ,29, ,53, ,6.6, ,2.4, ,23.5,L
-88,Cuyama,Central Coast Valleys,Jun-18,226, ,0, ,367,K,0.9, ,32.7, ,10.7, ,22, ,66, ,17, ,35, ,5.3, ,2.4, ,28.5, 
-88,Cuyama,Central Coast Valleys,Jul-18,239.24, ,0, ,328, ,1.1, ,37.4, ,17, ,27.3, ,60, ,16, ,32, ,8.7, ,2.2, ,33.1,K
-88,Cuyama,Central Coast Valleys,Aug-18,216.28, ,0, ,302, ,1, ,36.1, ,14, ,24.9, ,62, ,14, ,32, ,6.5, ,2.1, ,32.1,K
-88,Cuyama,Central Coast Valleys,Sep-18,166.52, ,0, ,255, ,0.9, ,33.4, ,10.8, ,21.3, ,67, ,16, ,36, ,5.4, ,2.1, ,28.7,L
-88,Cuyama,Central Coast Valleys,Oct-18,115.34, ,0.1, ,192, ,0.8, ,26.2, ,6.3, ,15.6, ,73, ,23, ,46, ,3.4, ,2.2,K,22,L
-88,Cuyama,Central Coast Valleys,Nov-18,76.68, ,5.5, ,133, ,0.6,K,22.1, ,2.4,K,11.3, ,64, ,25, ,43,K,-2.4,K,2,K,16.4,L
-88,Cuyama,Central Coast Valleys,Dec-18,46.84, ,2.8,K,105, ,0.7, ,15.2, ,0.9, ,7.3, ,91, ,44, ,70, ,1.9, ,2.1, ,10.4,K
-88,Cuyama,Central Coast Valleys,Jan-19,55.14, ,23.3, ,115, ,0.7,K,16.5, ,1.9,K,8.5,K,87, ,42, ,66,K,2.2,K,2.4,K,9.4,K
+88,Cuyama,Central Coast Valleys,18-Jan,55.06,K,0.51,L,111,L,0.9,L,19.6,L,3.6,L,10.9,L,85,L,46,L,64,L,3,L,2,L,11.8,L
+88,Cuyama,Central Coast Valleys,18-Feb,59.33,K,2.29,L,169,L,1,L,14.9,L,-2.2,L,6.8,L,99,L,87,L,94,L,4.7,L,2.5,L,12,L
+88,Cuyama,Central Coast Valleys,18-Mar,97.42,K,12.8,L,222,L,0.9,L,17.6,L,4.2,L,10.6,L,91,L,42,L,66,L,4.4,L,2.4,L,14.5,L
+88,Cuyama,Central Coast Valleys,18-Apr,154.36, ,0, ,287,K,0.8,K,23.7,K,6.1,K,14.5, ,81, ,26, ,49,L,3.6,L,2.5,K,20, 
+88,Cuyama,Central Coast Valleys,18-May,184.64, ,2.2, ,322,K,1, ,26.3, ,7.6, ,16.4, ,86, ,29, ,53, ,6.6, ,2.4, ,23.5,L
+88,Cuyama,Central Coast Valleys,18-Jun,226, ,0, ,367,K,0.9, ,32.7, ,10.7, ,22, ,66, ,17, ,35, ,5.3, ,2.4, ,28.5, 
+88,Cuyama,Central Coast Valleys,18-Jul,239.24, ,0, ,328, ,1.1, ,37.4, ,17, ,27.3, ,60, ,16, ,32, ,8.7, ,2.2, ,33.1,K
+88,Cuyama,Central Coast Valleys,18-Aug,216.28, ,0, ,302, ,1, ,36.1, ,14, ,24.9, ,62, ,14, ,32, ,6.5, ,2.1, ,32.1,K
+88,Cuyama,Central Coast Valleys,18-Sep,166.52, ,0, ,255, ,0.9, ,33.4, ,10.8, ,21.3, ,67, ,16, ,36, ,5.4, ,2.1, ,28.7,L
+88,Cuyama,Central Coast Valleys,18-Oct,115.34, ,0.1, ,192, ,0.8, ,26.2, ,6.3, ,15.6, ,73, ,23, ,46, ,3.4, ,2.2,K,22,L
+88,Cuyama,Central Coast Valleys,18-Nov,76.68, ,5.5, ,133, ,0.6,K,22.1, ,2.4,K,11.3, ,64, ,25, ,43,K,-2.4,K,2,K,16.4,L
+88,Cuyama,Central Coast Valleys,18-Dec,46.84, ,2.8,K,105, ,0.7, ,15.2, ,0.9, ,7.3, ,91, ,44, ,70, ,1.9, ,2.1, ,10.4,K
+,,,,,,,,,,,,,,,,,,,,,,,,,,,,,
                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 ,,,,,,,,,,,,,,,,,,,,,,,,,,,,,

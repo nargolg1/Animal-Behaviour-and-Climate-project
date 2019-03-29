@@ -1,0 +1,38 @@
+---
+title: "Carrizo 2018"
+author: "Nargol Ghazian"
+date: "March 28, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+###import CSV 
+climate <- read.csv("C:/Users/Nargol/Desktop/Animal-Behaviour-and-Climate-project/CH1/monthly Carrizo 2018 clim.csv")
+
+na.omit(climate)
+###no NAs were found
+
+```
+
+```{r}
+###explore data
+library (ggplot2)
+
+qplot (data = climate, y= Avg.Air.Temp..C., x= Month.Year, geom = "auto")+xlab("Month")+ ylab("Degrees Celcius")+ ggtitle("Average Monthly Temperature")+ theme_classic() + theme(axis.text = element_text(angle = 60, hjust=1))
+
+qplot (data= climate, y= Total.Precip..mm., x= Month.Year, geo= "auto")+ xlab("Month")+ ylab ("Total Precipitation (mm)")+ ggtitle("Total Monthly Precipitation")+ theme_classic() + theme(axis.text = element_text(angle = 60, hjust=1))
+
+qplot (data= climate, y= Avg.Sol.Rad..W.sq.m., x=Month.Year, geo="auto")+ xlab("Month")+ ylab ("Average Solar Radiation (W/m^2)")+ ggtitle("Average Monthly Solar Radiation")+ theme_classic() + theme(axis.text = element_text(angle = 60, hjust=1))
+
+```
+
+```{r}
+
+
+
+```
+
