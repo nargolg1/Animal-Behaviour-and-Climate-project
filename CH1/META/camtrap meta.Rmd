@@ -9,21 +9,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ```{r}
-##Create PRISMA chart
 
-library(tidyverse)
-library(PRISMAstatement)
-
-prisma(found = 420,
-       found_other = 0,
-       no_dupes = 397, 
-       screened = 397, 
-       screen_exclusions = 143, 
-       full_text = 254,
-       full_text_exclusions = 0, 
-       qualitative = 254, 
-       quantitative = 0,
-       width = 800, height = 800)
 
 
 ```
@@ -47,9 +33,8 @@ na.omit(table1)
 ```{r}
 library(ggplot2)
 
-qplot(x=Publication.Year, data = table1, geom = "auto")
+qplot(x=Publication.Year, data = table1, geom = "auto")+ theme_classic()
 
-str_count(table1$Title, pattern = "cam")
 ```
 
 ##conclusions and notes

@@ -1,0 +1,72 @@
+---
+title: "Looking at Mojave's Climate"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+####let's explore the monthly climate of the Mojave desert (Granite Cove) for the year 2018, looking at parameters such as total solar radiation, percipitation, average wind speed, and relative humidity. 
+
+```{r}
+#import dataset 
+
+climate <- read.csv("~/2018-2019 Masters/CH1/2018 mojave climate data.csv")
+
+#check for NAs
+
+na.omit(climate)#no NAs were found yay!
+
+```
+###Data Visualization 
+```{r}
+#let's visualize the distribution of the data
+
+summary(climate)
+
+library (ggplot2)
+
+qplot (data = climate, y= Average.Air.Temperature, x= date, geom = "auto") + xlab("Month")+ ylab("Degrees Farenheit")+ ggtitle("Average Monthly Temperature")+ theme_classic() + theme(axis.text = element_text(angle = 60, hjust=1))
+#looks like June, July and August are the hottest months.
+
+qplot(data = climate, y=Solar.Radiation, x=date, geom = c ("point", "smooth")) + xlab("Month")+ ylab("Langley")+ ggtitle("Average Monthly Temperature")+ theme_classic()+ theme(axis.text = element_text(angle = 60, hjust=1))
+#highest in June, July, August, and April. 
+
+boxplot (Precipitation~date, data = climate, main="Monthly Precipitation", xlab="Month", ylab="Inches")#meh not super useful, but at least we know the wettest season is January.
+
+
+```
+###Stats
+```{r}
+#let's explore some correlations 
+
+#data is continous so we use Pearson's correlation
+
+cor.test(climate$Average.Relative.Humidity, climate$Average.Air.Temperature, method="pearson")
+#cor coefficient is -0.057, but p-value is<0.05
+
+cor.test(climate$Precipitation, climate$Average.Air.Temperature, method="pearson")
+#cor coefficient is -0.25, p >0.05
+
+cor.test(climate$Solar.Radiation, climate$Average.Air.Temperature, method = "pearson") 
+#cor coefficient is -0.824, p=0.0009629<0.05
+
+cor.test(climate$Mean.Wind.Speed, climate$Average.Relative.Humidity, method = "pearson") 
+
+#cor coefficient is -0.015, p-value>>0.05
+
+cor.test (climate$Mean.Wind.Speed, climate$Average.Air.Temperature, method="pearson")
+
+
+
+
+```
+
+
+###Conclusions & Notes
+####-Using the 2018 Granite cove climate data of the Mojave National Perserve, we found out that June, July, and August are the hottest month. This is also true for the total solar radiation, but April also has a high radiation-prehaps why flowering generally occurs April. Additionally, January is the wettest season. 
+####- As for the correlations, temperature and solar radiation were significanly, positively correlated (p-value 0.0009629<0.05).
+####-This is a great start for digging deeper into the analyses of this regions climate.
+
+
+

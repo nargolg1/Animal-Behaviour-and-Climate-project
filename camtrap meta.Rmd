@@ -1,0 +1,49 @@
+---
+title: "Camtrap Meta"
+author: "Nargol Ghazian"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+
+```
+
+```{r}
+##import CSV of included abstracts
+
+table1 <- read.csv("~/2018-2019 Masters/CH1/systematic review round1 screening.csv")
+head(table1)
+
+na.omit(table1)
+```
+
+```{r}
+##explore data
+
+
+
+```
+
+```{r}
+library(ggplot2)
+
+histo<- qplot(x=Publication.Year, data = table1, geom = "auto")+theme_classic()
+```
+
+##conclusions and notes
+
+###-In the preliminary round of screeing duplicates were removed and the those abstracts left were further reviewed. Articles were atuomatically excluded when they were not in available in English, were an idea or synthesis paper.
+
+###-A total of 254 eligible atricles were skimmed through, which all contain some sort of camera trap conducted study.
+
+###-Most of these articles were published after the year 2015. This hightlights the emergence and importance of camtraps as a useful study tool in the field.
+
+###-the problem with this meta is that different studies report different parameters or the same parameter in a diffrderent way. Hence, althought the meta is possible, standardization amongst all the studies is needed, which is very time consuming. 
+
+
+
+```{r}

@@ -31,6 +31,16 @@ qplot (data= climate, y= Avg.Sol.Rad..W.sq.m., x=Month.Year, geo="auto")+ xlab("
 ```
 
 ```{r}
+###let's do some stats
+
+cor.test(climate$Total.Precip..mm, climate$Avg.Sol.Rad..W.sq.m., method="pearson")
+
+cor.test(climate$Total.Precip..mm, climate$Avg.Air.Temp..C., method="pearson")
+
+cor.test(climate$Avg.Wind.Speed..m.s., climate$Avg.Air.Temp..C., method="pearson")
+
+
+
 
 
 
