@@ -1,0 +1,47 @@
+---
+title: "Meta stats"
+author: "Nargol Ghazian"
+date: "August 7, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+##Import csv file 
+head (main.data <- read.csv("C:/Users/Nargol/Desktop/Animal-Behaviour-and-Climate-project/CH1/META/data extracted final.csv"))
+
+library (ggplot2)
+library (tidyverse)
+
+summary(main.data)
+
+```
+
+```{r}
+#Data Visualization
+qplot( data = main.data, camtrap.days, animal.richness)
+##not a good vis, does not show much
+qplot(data= main.data, animal.richness)
+qplot(data = main.data, camtrap.days)
+###none of these seem very useful
+
+
+##mapping where the studies took place
+install.packages("maps")
+install.packages("mapdata")
+library(ggmap)
+
+
+m <- ggplot(data = world, zoom=5) + 
+  geom_polygon(aes(x = long, y = lat, fill = region, group = group), color = "black", size=0.1) + 
+  coord_fixed(1.3) +
+  guides(fill=FALSE) #do this to leave off the colour legend
+
+m + geom_point(data=main.data, aes(x=long, y=lat), alpha = .50, size = 1, color = "blue")
+## we seem to have two coordinate outliers 
+
+```
+
