@@ -1,0 +1,90 @@
+---
+title: "Camera Trap Meta Analysis"
+author: "Nargol Ghazian"
+date: "September 20, 2019"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+#load packages
+library (tidyverse)
+
+#install Meta package and load
+install.packages("meta")
+library(meta)
+
+#searches on WoS
+studies <- read.csv ("C:/Users/Nargol/Desktop/Animal-Behaviour-and-Climate-project/CH1/META/result hits. csv.csv")
+knitr::kable(studies[1:3,])
+
+```
+
+```{r}
+library(ggplot2)
+ggplot (studies, aes (terms,returns, fill=source)) +
+  geom_bar (stat = "identity") +
+  coord_flip()+
+  labs(fill="")+
+  scale_fill_manual (values= c("WoS"="blue"))
+
+```
+
+```{r}
+#synthesize
+#derived data EDA
+#tabulate evidence
+#calculate effect sizes if needed
+
+data<- read.csv("C:/Users/Nargol/Desktop/Animal-Behaviour-and-Climate-project/CH1/META/data_statsready.csv")
+
+#count species reported more than once
+species_data <- data %>% group_by (scientific.name) %>% summarize (count= n()) %>% filter(count >=2)
+#we can do the same thing for study location and use of bait
+location_data <- data %>% group_by (type) %>% summarize (count= n()) %>% filter(count >=2)
+bait_data <- data %>% group_by (bait..yes.no.) %>% summarize (count= n()) %>% filter(count >=2)
+
+#tabulate to study-level data
+mean.r <- mean ( data$animal.richness, na.rm = TRUE) 
+sd.r <- sd (data$animal.richness, na.rm = TRUE) 
+
+#summarize,
+```
+
+
+```{r}
+#generate an evidence map
+#plot evidence by key mediators 
+#apply GLMs to frequency of studies
+
+
+ggplot(data, aes(reorder(as.character(Number), N.sites), N.sites)) +
+  geom_bar(stat = "identity") + 
+  labs(x = "study", y = "sites")
+#not the greatest plot
+
+ggplot(data, aes(reorder(as.character(Number), n.cams), n.cams)) +
+  geom_bar(stat = "identity") + 
+  coord_flip() +
+  labs(x = "study", y = "Number of Camraps") 
+
+
+ggplot(location_data, aes(reorder(type, count), count)) +
+         geom_bar(stat = "identity") +
+         coord_flip() +
+  labs(x = "species", y = "count")
+```
+
+
+```{r}
+
+m1 <- metacont (mean.r, sd.r, sm= "SMD")
+
+
+
+```
+
+

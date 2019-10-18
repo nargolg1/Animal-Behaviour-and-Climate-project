@@ -21,7 +21,7 @@ summary(main.data)
 ```
 
 ```{r}
-#Data Visualization
+Data Visualization
 qplot( data = main.data, camtrap.days, animal.richness)
 ##not a good vis, does not show much
 qplot(data= main.data, animal.richness)
@@ -35,13 +35,26 @@ install.packages("mapdata")
 library(ggmap)
 
 
-m <- ggplot(data = world, zoom=5) + 
+w <- map_data ("world")#get a world map 
+m <- ggplot(data = w, zoom=5) + 
   geom_polygon(aes(x = long, y = lat, fill = region, group = group), color = "black", size=0.1) + 
   coord_fixed(1.3) +
   guides(fill=FALSE) #do this to leave off the colour legend
 
 m + geom_point(data=main.data, aes(x=long, y=lat), alpha = .50, size = 1, color = "blue")
-## we seem to have two coordinate outliers 
+## we seem to have two coordinate outliers
+
+
+```
+
+```{r}
+EDA
+
+shapiro.test(main.data$animal.richness)#pvalue<0.05 so far distribution is not normal
+
+qqnorm(main.data$animal.richness)#distribuiton of animal richnness does not appear normal, outliers on both ends
+
+
 
 ```
 
