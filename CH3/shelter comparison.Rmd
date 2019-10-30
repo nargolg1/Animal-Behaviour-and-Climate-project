@@ -14,19 +14,23 @@ knitr::opts_chunk$set(echo = TRUE)
 
 
 ```{r}
+
+#open packages 
+library(ggplot2)
+library(ggthemes)
+
 #import dataset 
 main.data <- read.csv("C:/Users/Nargol/Desktop/Animal-Behaviour-and-Climate-project/CH3/shelter_logger_comparison.csv")
 
-#open packages 
-library (dplyr)
-library (ggplot2)
-library(ggthemes)
+str(main.data)
 
-#cleanup data 
+
+
 #exclude missing values
-data.final <-na.omit (main.data)
+data.final<-na.omit(main.data)
 #check for missing values
-is.na(data.final)
+head(is.na(data.final))
+
 
 summary (data.final)
 ```
@@ -38,23 +42,30 @@ summary (data.final)
 qplot (data=data.final, temp)#data seem right-skewed
 qplot (data=data.final, Intensity)#data looks exponential, but we have to explore more
 
-#graph a boxplot for temperature, and light per type of cover and shape
-ggplot(data.final, aes(as.factor(cover.type), temp, fill= shape)) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
-
-#boxplots overalp, prehaps significanlty different
-
-ggplot(data.final, aes(as.factor(shelter.open), temp, fill= cover.type)) + geom_boxplot() + xlab("Treatment") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#don't understand why there is two treatments of shelter and open, gradient looks odd
-
-ggplot(data.final, aes(as.factor(shelter.open), Intensity, fill= cover.type)) + geom_boxplot() + xlab("Treatment") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
-
-ggplot(data.final, aes(as.factor(cover.type), Intensity, fill= shape)) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
-
-
 #let's see if temperature and light intensity are correlated 
-qplot(data= data.final, temp, Intensity, geom = c ("point", "smooth")) + xlab("Temperature (°F)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))  #there seems to be a positive correlation
+qplot(data= data.final, temp, Intensity, geom = c ("point", "smooth")) + xlab("Temperature (°F)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#there seems to be a positive correlation
 
-#let's see if mean daily temperature varies through time
-ggplot(data=data.final, aes(date, temp)) + geom_boxplot(aes(fill=shelter.open))#temperature varies quite a bit during sampling period, again two replicates of treatment are present....
+#graph a boxplot for temperature, and light per type of cover and shape
+ggplot(data.final, aes(as.factor(cover.type), Intensity, fill= shape)) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#boxplots overalp, prehaps significanlty different
+
+ggplot(data.final, aes(as.factor(cover.type), temp, fill= shape)) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+
+
+ggplot(data.final, aes(as.factor(shelter.open), temp, fill= as.character(cover.type))) + geom_boxplot() + xlab("Treatment") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+
+ggplot(data.final, aes(as.factor(shelter.open), Intensity, fill= as.character(cover.type))) + geom_boxplot() + xlab("Treatment") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+
+
+#let's see if mean daily temperature and light varies by timeblock 
+ggplot(data=data.final, aes(timeblock, temp)) + geom_boxplot(aes(fill=shape))+ ylab("Temperature (°F)")+ xlab("Timeblock")+  theme_classic()+ theme(axis.text=element_text(size=12))#boxplot overlapp, again two replicates of treatment are present....
+
+ggplot(data=data.final, aes(timeblock, Intensity)) + geom_boxplot(aes(fill=shape))+ ylab("Light Intensity (lum/ft²)")+ xlab("Timeblock")+  theme_classic()+ theme(axis.text=element_text(size=12)) #boxplot overlap, again two replicates of treatment are present....
+
+
+#let's try some linear regressions
+library(ggpubr)
+ggplot(data=data.final, aes(x=cover.type, y=temp))+ geom_line(aes(colour=shape))#no help whatsoever 
+
 
 
 
@@ -67,9 +78,9 @@ ggplot(data=data.final, aes(date, temp)) + geom_boxplot(aes(fill=shelter.open))#
 #can't do Shapiro-Wilk dataset too large 
 library(ggpubr)
 
-ggqqplot(data.final$temp)#data is positively(right) skewed 
+ggqqplot(data.final$temp)#data is positively(right) skewed, Gaussian  
 hist(data.final$temp) 
-ggqqplot(data.final$Intensity)
+ggqqplot(data.final$Intensity)#data looks exponential or poisson 
 hist(data.final$Intensity)
 #neither intensity nor temperature follow a normal distribution
 ```
@@ -78,7 +89,7 @@ hist(data.final$Intensity)
 ```{r}
 #Models
 cor.test(data.final$temp, data.final$Intensity, method= "kendall")
-library (ggpubr)
+
 
 ggscatter(data.final, x="temp", y="Intensity", add= "reg.line", conf.int = TRUE, cor.coef = TRUE, method="kendall", xlab = "Temperature (°F)", ylab = "Light Intensity (lum/ft²)")#temperature and light are positively correlated (p-value<0.05)
 
@@ -94,33 +105,30 @@ kruskal.test(temp ~ cover.type, data = data.final)# p-value<0.05
 pairwise.wilcox.test(data.final$temp, data.final$cover.type)
 #there is a sig. difference between 50% and 15% (p=0.0013), and between 90% and 50% (p=0.0115)
 
-res.aov3 <- aov(temp~shelter.open*cover.type, data = data.final)
+res.aov3 <- aov(temp~cover.type*shape+timeblock, data = data.final)
 summary (res.aov3)
-#significant for shelter versus open with cover as a covariate (p=0.00348<0.01)
+#cover.type by shape is significant (p=0.0743<0.1)
 
 #explore light intensity 
-res.aov5 <- aov(Intensity~cover.type*shape, data = data.final)
+res.aov5 <- aov(Intensity~cover.type*shape+timeblock, data = data.final)
 summary (res.aov5)
 #the type of cover does not affect light intensity significanly, but just shape and shape and cover together do
 
-glm1 <- glm(temp~shelter.open*cover.type, data = data.final)
-summary (glm1)
+lm1 <- glm(temp~shelter.open*cover.type*shape+timeblock, data = data.final, family="gaussian")
+summary (lm1)
 
-glm2 <- glm(temp~shelter.open*shape, data = data.final)
-summary (glm2)
-
-glm3 <- glm (Intensity~cover.type*shape, data = data.final)
-summary (glm3)
+lm2 <- glm(Intensity~shelter.open*cover.type*shape+timeblock, data = data.final, family="quasipoisson")
+summary(lm2) #iterations was 6, prehaps not the best model 
 
 ```
 
 ```{r}
 #Summary 
 ###1. The intensity of sunlight and temperature are positively correlated.(R=0.61, p-value= <2.2e-16)
-###2. Shape does not significanly affect the temperature of canopy.
-###3. The percentage of cover used significantly affects temperature (p-value=0.00137<0.01).
+###2. Shape does significanly affect the temperature of canopy.
+###3. The percentage of cover used significantly affects temperature.
 ###3. there is a signicant difference between 50% and 15% cover (p-value=0.0013), and between 90% and 50% (p-value=0.0115), cover when it comes to temperature.
-###4. The type of cover used does not affect sunlight under canopy significantly by itself, however shape and shape and type of cover together do have a sginificant impact (p-value=0.0115<0.05, and p-value=<2e-16<0001, respectively)
+
 ```
 
 
