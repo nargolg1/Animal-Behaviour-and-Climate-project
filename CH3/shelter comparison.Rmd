@@ -31,7 +31,9 @@ data.final<-na.omit(main.data)
 #check for missing values
 head(is.na(data.final))
 
-
+data.final$shelter.open <- gsub(" ", "", data.final$shelter.open)
+data.final$shelter.open <- as.factor(data.final$shelter.open)
+str(data.final)
 summary (data.final)
 ```
 
@@ -118,7 +120,7 @@ lm1 <- glm(temp~shelter.open*cover.type*shape+timeblock, data = data.final, fami
 summary (lm1)
 
 lm2 <- glm(Intensity~shelter.open*cover.type*shape+timeblock, data = data.final, family="quasipoisson")
-summary(lm2) #iterations was 6, prehaps not the best model 
+summary(lm2) 
 
 ```
 
