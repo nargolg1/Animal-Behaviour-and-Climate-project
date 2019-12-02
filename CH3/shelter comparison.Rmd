@@ -6,6 +6,8 @@ output:
   html_document:
     toc: true
     toc_depth: 2
+editor_options: 
+  chunk_output_type: console
 ---
 
 ```{r setup, include=FALSE}
@@ -112,12 +114,23 @@ library (emmeans)
 anova(lm1, test = "Chisq")#all varibles are significant
 emmeans(lm1, pairwise~shape|cover.type|timeblock)
 
-lm2 <- glm(Intensity~shape*cover.type+timeblock, data = data.final, family="quasipoisson")
+lm2 <- glm(Intensity~shape*cover.type+timeblock, data = data.final, family="poisson")
 summary(lm2) 
 anova (lm2, test="Chisq")#all variables are significant
 emmeans(lm2, pairwise~shape|cover.type|timeblock)
 
 
+anova1 <- aov (temp~cover.type*timeblock, data.final)
+summary (anova1)
+
+anova2 <- aov (Intensity~cover.type*timeblock, data.final)
+summary (anova2)
+
+anova3 <-aov (temp~shape*timeblock, data.final)
+summary (anova3)
+
+anova4 <-aov (Intensity~shape*timeblock, data.final)
+summary (anova4)
 ```
 
 ```{r}
