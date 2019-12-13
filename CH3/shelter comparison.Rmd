@@ -50,7 +50,10 @@ qplot (data=data.final, Intensity)#data looks exponential, but we have to explor
 qplot(data= data.final, temp, Intensity, geom = c ("point", "smooth")) + xlab("Temperature (°F)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#there seems to be a positive correlation
 
 #plot temp and cover.type for different timeblocks
-ggplot (data.final, aes(as.factor(cover.type), temp))+ facet_grid(~timeblock) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+ggplot (data.final, aes(as.factor(cover.type), temp))+ facet_grid(~timeblock) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))
+
+
+library(ggsignif)
 
 #plot light intensity and cover type for the different shapes
 ggplot(data.final, aes(as.factor(cover.type), Intensity, fill= shape)) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#boxplots overalp, prehaps significanlty different
@@ -61,14 +64,15 @@ ggplot(data.final, aes(as.factor(cover.type), temp, fill= shape)) + geom_boxplot
 #plot change in temperature for the different shapes
 ggplot(data.final, aes(as.factor(shape),temp, fill=shape))+geom_boxplot() + facet_grid(~timeblock)+ xlab("Structure")+ ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
-
+        axis.ticks.x=element_blank())+ theme(axis.text=element_text(size=12))+geom_signif(comparisons = list(c("Triangle", "Square")), 
+              map_signif_level=TRUE)
 #plot change in light intensity for the different cover types
 ggplot(data.final, aes(as.factor(cover.type), Intensity))+ facet_grid(~timeblock) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
 
 #plot changes in light intensity for the different shapes
 ggplot(data.final, aes(as.factor(shape), Intensity, fill=shape))+geom_boxplot() + facet_grid(~timeblock)+ xlab("Structure")+ ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.title.x=element_blank(),axis.text.x=element_blank(),
-        axis.ticks.x=element_blank())
+        axis.ticks.x=element_blank())+ theme(axis.text=element_text(size=12))+geom_signif(comparisons = list(c("Square", "Triangle")), 
+              map_signif_level=TRUE)
 
 #extra plots      
 ggplot(data.final, aes(as.factor(shelter.open), temp, fill= as.character(cover.type))) + geom_boxplot() + xlab("Treatment") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+labs (fill= "Cover Type")
@@ -108,16 +112,17 @@ ggplot(data.final, aes(temp, Intensity))+geom_point()+ ylab("Light Intensity (lu
 ggplot(data.final, aes(temp, Intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm',se= FALSE)+  facet_wrap(~cover.type, scales = "free")+ theme_classic()
 
 #let's fit some models
-lm1 <- glm(temp~shape*cover.type+timeblock, data = data.final, family="gaussian")
+lm1 <- glm(temp~as.factor(shape)* as.factor (cover.type)+as.factor(timeblock), data = data.final, family="gaussian")
 summary (lm1)
 library (emmeans)
 anova(lm1, test = "Chisq")#all varibles are significant
-emmeans(lm1, pairwise~shape|cover.type|timeblock)
+emmeans(lm1, pairwise~shape|cover.type*timeblock)
 
-lm2 <- glm(Intensity~shape*cover.type+timeblock, data = data.final, family="poisson")
+
+lm2 <- glm(Intensity~as.factor(shape)*as.factor(cover.type)+as.factor(timeblock), data = data.final, family="poisson")
 summary(lm2) 
 anova (lm2, test="Chisq")#all variables are significant
-emmeans(lm2, pairwise~shape|cover.type|timeblock)
+emmeans(lm2, pairwise~shape|cover.type*timeblock)
 
 
 anova1 <- aov (temp~cover.type*timeblock, data.final)
