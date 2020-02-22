@@ -1,0 +1,27 @@
+weather.station,site,sensor,lat,long,date,year,month,day,temp.max,temp.min,temp.mean 
+los banos,panoche,station,-120.867,37.0563,5/18/2019,2019,5,18,83.1,55.2,69.15
+los banos,panoche,station,-120.867,37.0563,5/19/2019,2019,5,19,83.3,55.4,69.35
+los banos,panoche,station,-120.867,37.0563,5/20/2019,2019,5,20,83.5,55.4,69.45
+los banos,panoche,station,-120.867,37.0563,5/21/2019,2019,5,21,83.7,55.6,69.65
+los banos,panoche,station,-120.867,37.0563,5/22/2019,2019,5,22,83.9,55.8,69.85
+los banos,panoche,station,-120.867,37.0563,5/23/2019,2019,5,23,84.2,55.9,70.05
+los banos,panoche,station,-120.867,37.0563,5/24/2019,2019,5,24,84.4,56.1,70.25
+los banos,panoche,station,-120.867,37.0563,5/25/2019,2019,5,25,84.6,56.2,70.4
+los banos,panoche,station,-120.867,37.0563,5/26/2019,2019,5,26,84.8,56.2,70.5
+los banos,panoche,station,-120.867,37.0563,5/27/2019,2019,5,27,85,56.3,70.65
+los banos,panoche,station,-120.867,37.0563,5/28/2019,2019,5,28,85.2,56.6,70.9
+los banos,panoche,station,-120.867,37.0563,5/29/2019,2019,5,29,85.4,56.7,71.05
+los banos,panoche,station,-120.867,37.0563,5/30/2019,2019,5,30,85.6,56.9,71.25
+los banos,panoche,station,-120.867,37.0563,5/31/2019,2019,5,31,85.9,57,71.45
+los banos,panoche,station,-120.867,37.0563,6/1/2019,2019,6,1,86.1,57.1,71.6
+los banos,panoche,station,-120.867,37.0563,6/2/2019,2019,6,2,86.3,57.3,71.8
+los banos,panoche,station,-120.867,37.0563,6/3/2019,2019,6,3,86.5,57.4,71.95
+los banos,panoche,station,-120.867,37.0563,6/4/2019,2019,6,4,86.7,57.6,72.15
+los banos,panoche,station,-120.867,37.0563,6/5/2019,2019,6,5,87,57.7,72.35
+los banos,panoche,station,-120.867,37.0563,6/6/2019,2019,6,6,87.2,57.9,72.55
+los banos,panoche,station,-120.867,37.0563,6/7/2019,2019,6,7,87.4,58,72.7
+los banos,panoche,station,-120.867,37.0563,6/8/2019,2019,6,8,87.7,58.2,72.95
+los banos,panoche,station,-120.867,37.0563,6/9/2019,2019,6,9,87.9,58.3,73.1
+los banos,panoche,station,-120.867,37.0563,6/10/2019,2019,6,10,88.2,58.8,73.5
+los banos,panoche,station,-120.867,37.0563,6/11/2019,2019,6,11,88.4,58.7,73.55
+los banos,panoche,station,-120.867,37.0563,6/12/2019,2019,6,12,88.7,58.8,73.75
