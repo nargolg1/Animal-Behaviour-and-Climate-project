@@ -1,4 +1,4 @@
-weather.station,site,sensor,lat,long,date,year,month,day,temp.max,temp.min,temp.mean 
+station.name,site,sensor,lat,long,date,year,month,day,temp.max,temp.min,temp.mean 
 los banos,panoche,station,-120.867,37.0563,5/18/2019,2019,5,18,83.1,55.2,69.15
 los banos,panoche,station,-120.867,37.0563,5/19/2019,2019,5,19,83.3,55.4,69.35
 los banos,panoche,station,-120.867,37.0563,5/20/2019,2019,5,20,83.5,55.4,69.45
