@@ -1,0 +1,104 @@
+---
+title: "Shelter.open.shrub"
+author: "Nargol Ghazian"
+date: "03/03/2020"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library (tidyverse)
+
+#import datasets
+panoche.climate.2019<-read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/panoche_climate_hourly 2019.csv")
+
+mean.daily.panoche <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/weather station climate.csv")
+
+str(panoche.climate.2019)
+na.omit (panoche.climate.2019)#exclude missing values
+(is.na(panoche.climate.2019))#check for missing values
+na.omit (mean.daily.panoche)
+```
+
+
+```{r}
+##macro-climate plots
+library(ggplot2)
+ggplot (panoche.climate.2019, aes((hour), air.temp)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how air temperature changed during 24h period in 2019 during study period
+
+ggplot (panoche.climate.2019, aes((hour), soil.temp)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how soil temperature changed during 24h period in 2019 during study period
+
+ggplot (panoche.climate.2019, aes((hour), radiation)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Solar Radiation (W/m²)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how solar radiation changed during 24h period in 2019 during study period
+
+install.packages("ggbeeswarm")
+library (ggbeeswarm)
+ggplot (panoche.climate.2019, aes((date), air.temp)) + geom_boxplot() + xlab("Date") + ylab ("Temperature (°C)")+ geom_quasirandom(alpha=0.05)+ theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))+ theme(axis.text.x = element_text(angle = 90))#daily air temperature averages
+
+install.packages("cvequality")
+library (cvequality)
+temp.by.date <- 
+with(panoche.climate.2019, 
+     asymptotic_test(air.temp,date))#returns NA hmmm..need to think more about this
+
+
+```
+
+
+```{r}
+##micro-climate plots
+
+shelter.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/Nargol_shelter_open.csv")
+
+na.omit(shelter.open)
+is.na(shelter.open)
+
+ggplot(shelter.open, aes((day), temp, fill= timeblock)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour
+
+ggplot(shelter.open, aes((day), temp, fill= microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour
+
+ggplot(shelter.open, aes((day), intensity, fill= timeblock)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour or date 
+
+ggplot(shelter.open, aes((day), intensity, fill= microsite)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour or date 
+
+##let's try some plots for shelter, shrub and open
+
+shelter.shrub.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/shelter_open_shrub.csv")#import dataset
+na.omit (shelter.shrub.open)#get rid of NA's
+
+ggplot(shelter.shrub.open, aes((day), temp, fill= microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour
+
+ggplot(shelter.shrub.open, aes((microsite), temp)) + geom_boxplot() + xlab("Microsite") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))#not bad
+
+ggplot(shelter.shrub.open, aes((microsite), intensity)) + geom_boxplot() + xlab("Microsite") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))
+
+ggplot(shelter.shrub.open, aes((day), temp, fill=microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+
+
+```
+
+
+```{r}
+anova.shrub.temp <- aov (temp~microsite, shelter.shrub.open, test='chisq')
+summary (anova.shrub.temp)
+
+anova.shrub.intensity<- aov (intensity~microsite, shelter.shrub.open, test= 'chisq' )
+summary (anova.shrub.intensity)
+
+
+lm.temp <- glm(temp~as.factor(microsite)* as.factor (cover.type)+as.factor(timeblock), data = shelter.shrub.open, family="gaussian")
+summary (lm.temp)
+library (emmeans)
+anova(lm.temp, test = "Chisq")#all varibles are significant
+emmeans(lm.temp, pairwise~microsite|cover.type*timeblock)
+
+
+
+
+
+```
+
