@@ -72,7 +72,7 @@ ggplot(data.final, aes(as.factor(cover.type), Intensity))+ facet_grid(~timeblock
 #plot changes in light intensity for the different shapes
 ggplot(data.final, aes(as.factor(shape), Intensity, fill=shape))+geom_boxplot() + facet_grid(~timeblock)+ xlab("Structure")+ ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.title.x=element_blank(),axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+ theme(axis.text=element_text(size=12))+geom_signif(comparisons = list(c("Square", "Triangle")), 
-              map_signif_level=TRUE)
+              map_signif_level=TRUE)+ theme(legend.position = "none")
 
 #extra plots      
 ggplot(data.final, aes(as.factor(shelter.open), temp, fill= as.character(cover.type))) + geom_boxplot() + xlab("Treatment") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+labs (fill= "Cover Type")

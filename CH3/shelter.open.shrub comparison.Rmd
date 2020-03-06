@@ -30,48 +30,60 @@ head(na.omit (mean.daily.panoche))
 ```{r}
 ggplot (panoche.climate.2019, aes((hour), air.temp)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how air temperature changed during 24h period in 2019 during study period
 
+ggplot (panoche.climate.2019, aes((day), air.temp)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#air temp over number of days
+
 ggplot (panoche.climate.2019, aes((hour), soil.temp)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how soil temperature changed during 24h period in 2019 during study period
 
+ggplot (panoche.climate.2019, aes((day), soil.temp)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how soil temperature changed during 24h period in 2019 during study period
+
 ggplot (panoche.climate.2019, aes((hour), radiation)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Solar Radiation (W/m²)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how solar radiation changed during 24h period in 2019 during study period
+
+ggplot (panoche.climate.2019, aes((day), radiation)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (W/m²)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))
 
 library (ggbeeswarm)
 ggplot (panoche.climate.2019, aes((date), air.temp)) + geom_boxplot() + xlab("Date") + ylab ("Temperature (°C)")+ geom_quasirandom(alpha=0.05)+ theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))+ theme(axis.text.x = element_text(angle = 90))+ geom_smooth(se=FALSE, color="black", aes(group=1))#daily air temperature averages
 
-library (cvequality)
-temp.by.date <- 
-with(panoche.climate.2019, 
-     asymptotic_test(air.temp,date))#returns NA hmmm..need to think more about this
 
 ```
 
 ```{r}
 ##micro-climate plots
-
-shelter.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/Nargol_shelter_open.csv")
-
-head(na.omit(shelter.open))
-head(is.na(shelter.open))
-
-ggplot(shelter.open, aes((day), temp, fill= timeblock)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour
-
-ggplot(shelter.open, aes((day), temp, fill= microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour
-
-ggplot(shelter.open, aes((day), intensity, fill= timeblock)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour or date 
-
-ggplot(shelter.open, aes((day), intensity, fill= microsite)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour or date 
-
-##let's try some plots for shelter, shrub and open
+##let's try some plots for shelter, shrub, and open
 
 shelter.shrub.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/shelter_open_shrub.csv")#import dataset
 head(na.omit (shelter.shrub.open))#get rid of NA's
-
-ggplot(shelter.shrub.open, aes((day), temp, fill= microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))#works better by day rather than hour
 
 ggplot(shelter.shrub.open, aes((microsite), temp)) + geom_boxplot() + xlab("Microsite") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))#not bad
 
 ggplot(shelter.shrub.open, aes((microsite), intensity)) + geom_boxplot() + xlab("Microsite") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))
 
-ggplot(shelter.shrub.open, aes((day), temp, fill=microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth(se=FALSE) + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+
+ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + geom_smooth(se=FALSE) + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+
+#visualizing mean, median, and mode with histograms
+
+ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
+         geom_histogram(binwidth = 5) +
+  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))
+#looks great you can report the actual numbers as well in the text
+
+library(ggpubr)
+
+ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
+         geom_histogram(binwidth = 5) +
+  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
+
+ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
+         geom_density() +
+  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))
+
+ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
+         geom_density() +
+  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
+
+
+
 
 ```
 
@@ -88,13 +100,15 @@ anova(lm.intensity, test = "Chisq")
 emmeans(lm.temp, pairwise~microsite)
 ##there are differences between the shelter and shrubs
 
-
 ```
+
+
 ##conclusions
 
 #1. Still have to think about CV and mean. The most common way people plot is just a scatterplot. Not much else you can do except calculating them and putting them in table.
 #2. Macroclimate data from station looks great. Great addition to the paper. Boxplot-daily trend-line looks like a courser scale trendline from loggers, which is pretty interesting.
-#3. Microclimate/logger data does not work well hourly...graph is too dense and clumped. Better as a daily plot.
-#4. There are differences between shrubs and shelters for both light and temperature. 
+#3. Microclimate/logger data does not work well hourly...graph is too dense and clumped. Better as a daily plot. Fixed it and turned the lines into colours.
+#4. found a nice way to show mean, median and mode.
+
 
 ```{r}
