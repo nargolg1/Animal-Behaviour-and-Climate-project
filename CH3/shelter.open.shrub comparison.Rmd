@@ -57,9 +57,9 @@ ggplot(shelter.shrub.open, aes((microsite), temp)) + geom_boxplot() + xlab("Micr
 
 ggplot(shelter.shrub.open, aes((microsite), intensity)) + geom_boxplot() + xlab("Microsite") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))
 
-ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth(se=FALSE) + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
 
-ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + geom_smooth(se=FALSE) + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
 
 #visualizing mean, median, and mode with histograms
 
