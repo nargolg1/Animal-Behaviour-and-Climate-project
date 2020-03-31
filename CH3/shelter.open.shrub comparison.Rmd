@@ -51,9 +51,9 @@ ggplot (panoche.climate.2019, aes((date), air.temp)) + geom_boxplot() + xlab("Da
 ##let's try some plots for shelter, shrub, and open
 
 shelter.shrub.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/shelter_open_shrub.csv")#import dataset
-head(na.omit (shelter.shrub.open))#get rid of NA's
 
 ggplot(shelter.shrub.open, aes((microsite), temp)) + geom_boxplot() + xlab("Microsite") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))#not bad
+
 
 ggplot(shelter.shrub.open, aes((microsite), intensity)) + geom_boxplot() + xlab("Microsite") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))
 
@@ -83,8 +83,6 @@ ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
   scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
 
 
-
-
 ```
 
 ```{r}
@@ -98,17 +96,39 @@ lm.intensity <- glm(intensity~as.factor(microsite), data=shelter.shrub.open, fam
 summary (lm.intensity)
 anova(lm.intensity, test = "Chisq")
 emmeans(lm.temp, pairwise~microsite)
-##there are differences between the shelter and shrubs
+emmeans (lm.intensity, pairwise~microsite)
+
+```
+
+
+```{r}
+library(ggplot2)
+#let's create a heatmap
+ggplot(shelter.shrub.open, aes(as.factor(day), as.factor(microsite), fill=temp))+ geom_tile()+ xlab("Day") + ylab ("Microsite")+theme(axis.text.x = element_text(angle = 90))+ scale_fill_distiller (palette='OrRd')+ theme_classic()+ labs(fill = "Temperature (°F)")
+
+#geom_jitter plot for max and min of intensity for each microsite
+ggplot(shelter.shrub.open, aes(x = as.factor(microsite), y = intensity)) +
+  scale_y_log10() +
+  geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = 1/4) +
+  stat_summary(fun.y = min, colour = "blue", geom = "point", size = 5) +
+  stat_summary(fun.y = max, colour = "orange", geom = "point", size = 5)+ xlab("")+ ylab("Solar Radiation (lum/ft²)")+theme_classic()
+
+#faceted by microsite
+ggplot(shelter.shrub.open, aes(x = as.factor(day), y = intensity)) +
+  scale_y_log10() +
+  geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = 1/4) +
+  stat_summary(fun.y = min, colour = "blue", geom = "point", size = 5) +
+  stat_summary(fun.y = max, colour = "orange", geom = "point", size = 5)+ xlab("")+ ylab("Solar Radiation (lum/ft²)")+theme_classic()+ facet_wrap(~microsite)
 
 ```
 
 
 ##conclusions
 
-#1. Still have to think about CV and mean. The most common way people plot is just a scatterplot. Not much else you can do except calculating them and putting them in table.
-#2. Macroclimate data from station looks great. Great addition to the paper. Boxplot-daily trend-line looks like a courser scale trendline from loggers, which is pretty interesting.
-#3. Microclimate/logger data does not work well hourly...graph is too dense and clumped. Better as a daily plot. Fixed it and turned the lines into colours.
-#4. found a nice way to show mean, median and mode.
+
+#1. Macroclimate data from station looks great. Great addition to the paper. Boxplot-daily trend-line looks like a courser scale trendline from loggers, which is pretty interesting.
+#2. Microclimate/logger data does not work well hourly...graph is too dense and clumped. Better as a daily plot. Fixed it and turned the lines into colours.
+#3. Heat map looks great.
 
 
 ```{r}

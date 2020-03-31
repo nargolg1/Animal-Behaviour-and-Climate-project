@@ -21,7 +21,7 @@ library(ggplot2)
 library(ggthemes)
 
 #import dataset 
-main.data <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/shelter_logger_comparison.csv")
+main.data <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/Carrizo_shrub_logger.csv")
 
 str(main.data)
 
@@ -70,7 +70,7 @@ ggplot(data.final, aes(as.factor(shape),temp, fill=shape))+geom_boxplot() + face
 ggplot(data.final, aes(as.factor(cover.type), Intensity))+ facet_grid(~timeblock) + geom_boxplot() + xlab("Cover Type (% light permeability)") + ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
 
 #plot changes in light intensity for the different shapes
-ggplot(data.final, aes(as.factor(shape), Intensity, fill=shape))+geom_boxplot() + facet_grid(~timeblock)+ xlab("Structure")+ ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.title.x=element_blank(),axis.text.x=element_blank(),
+ggplot(data.final, aes(as.factor(shape), Intensity, fill=shape))+geom_boxplot() + xlab("Structure")+ ylab ("Light Intensity (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.title.x=element_blank(),axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+ theme(axis.text=element_text(size=12))+geom_signif(comparisons = list(c("Square", "Triangle")), 
               map_signif_level=TRUE)+ theme(legend.position = "none")
 
@@ -91,8 +91,8 @@ library(ggpubr)
 
 ggqqplot(data.final$temp)#data is positively(right) skewed, Gaussian  
 hist(data.final$temp) 
-ggqqplot(data.final$Intensity)#data looks exponential or poisson 
-hist(data.final$Intensity)
+ggqqplot(data.final$intensity)#data looks exponential or poisson 
+hist(data.final$intensity)
 #neither intensity nor temperature follow a normal distribution
 ```
 
@@ -100,7 +100,8 @@ hist(data.final$Intensity)
 ```{r}
 #Models
 #explore light and temp relationship
-cor.test(data.final$temp, data.final$Intensity, method= "kendall")#light and temp are correlated p<0.05
+cor.test(data.final$temp, data.final$intensity, method= "kendall")#light and temp are correlated p<0.05
+
 
 #create scatterplot for the above relationship 
 ggplot(data.final, aes(temp, Intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  facet_grid(cover.type~timeblock, scales = "free")+ theme_classic()#prehaps too dense too look at
