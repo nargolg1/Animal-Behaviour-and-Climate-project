@@ -28,6 +28,7 @@ head(na.omit (mean.daily.panoche))
 
 
 ```{r}
+##macro-climate plots
 ggplot (panoche.climate.2019, aes((hour), air.temp)) + geom_smooth() + xlab("Hour (0-24)") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#how air temperature changed during 24h period in 2019 during study period
 
 ggplot (panoche.climate.2019, aes((day), air.temp)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°C)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#air temp over number of days
@@ -50,12 +51,16 @@ ggplot (panoche.climate.2019, aes((date), air.temp)) + geom_boxplot() + xlab("Da
 ##micro-climate plots
 ##let's try some plots for shelter, shrub, and open
 
-shelter.shrub.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/shelter_open_shrub.csv")#import dataset
+shelter.shrub.open <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/shrub_contrast_final.csv")#import dataset
 
-ggplot(shelter.shrub.open, aes((microsite), temp)) + geom_boxplot() + xlab("Microsite") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))#not bad
+ggplot(shelter.shrub.open, aes((microsite), temp, fill=microsite)) + geom_boxplot() + xlab("Microsite") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))+theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+ labs(fill = "Microsite")#not bad
 
 
-ggplot(shelter.shrub.open, aes((microsite), intensity)) + geom_boxplot() + xlab("Microsite") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))
+ggplot(shelter.shrub.open, aes((microsite), intensity, fill=microsite)) + geom_boxplot() + xlab("Microsite") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))+theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+ labs(fill = "Microsite")
 
 ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth() + xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
 
@@ -86,6 +91,8 @@ ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
 ```
 
 ```{r}
+##model hypotheses
+##pair-wise comparison
 lm.temp <- glm(temp~as.factor(microsite), data = shelter.shrub.open, family="gaussian")
 summary (lm.temp)
 library (emmeans)
@@ -101,8 +108,9 @@ emmeans (lm.intensity, pairwise~microsite)
 ```
 
 
+
 ```{r}
-library(ggplot2)
+
 #let's create a heatmap
 ggplot(shelter.shrub.open, aes(as.factor(day), as.factor(microsite), fill=temp))+ geom_tile()+ xlab("Day") + ylab ("Microsite")+theme(axis.text.x = element_text(angle = 90))+ scale_fill_distiller (palette='OrRd')+ theme_classic()+ labs(fill = "Temperature (°F)")
 
@@ -118,7 +126,21 @@ ggplot(shelter.shrub.open, aes(x = as.factor(day), y = intensity)) +
   scale_y_log10() +
   geom_jitter(position = position_jitter(width = 0.1, height = 0), alpha = 1/4) +
   stat_summary(fun.y = min, colour = "blue", geom = "point", size = 5) +
-  stat_summary(fun.y = max, colour = "orange", geom = "point", size = 5)+ xlab("")+ ylab("Solar Radiation (lum/ft²)")+theme_classic()+ facet_wrap(~microsite)
+  stat_summary(fun.y = max, colour = "orange", geom = "point", size = 5)+ xlab("Day")+ ylab("Solar Radiation (lum/ft²)")+theme_classic()+ facet_grid(~microsite)+ coord_flip()+ theme(axis.text.x = element_text(angle = 90))
+```
+```{r}
+##test between macro-climate and micro-climate
+
+macro.micro.contrast <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/micro-macro-contrast.csv")
+
+anova_temp_microsite <- aov(temp~microsite, data = macro.micro.contrast)
+summary(anova_temp_microsite)
+TukeyHSD(anova_temp_microsite)
+
+ggplot(macro.micro.contrast, aes((microsite), temp, fill=microsite)) + geom_boxplot() + xlab("Site") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))+ theme(axis.title.x=element_blank(),
+        axis.text.x=element_blank(),
+        axis.ticks.x=element_blank())+ labs(fill = "Site")
+#weather station data are significantly differnt from shrub, open, and square.
 
 ```
 
@@ -129,6 +151,7 @@ ggplot(shelter.shrub.open, aes(x = as.factor(day), y = intensity)) +
 #1. Macroclimate data from station looks great. Great addition to the paper. Boxplot-daily trend-line looks like a courser scale trendline from loggers, which is pretty interesting.
 #2. Microclimate/logger data does not work well hourly...graph is too dense and clumped. Better as a daily plot. Fixed it and turned the lines into colours.
 #3. Heat map looks great.
+#4. Macro-climate data is significaly different from micro-climate. Loggers are a better predictor of fine scale abiotic changes.
 
 
 ```{r}
