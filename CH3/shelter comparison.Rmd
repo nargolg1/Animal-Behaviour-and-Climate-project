@@ -113,17 +113,17 @@ ggplot(data.final, aes(temp, Intensity))+geom_point()+ ylab("Light Intensity (lu
 ggplot(data.final, aes(temp, Intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm',se= FALSE)+  facet_wrap(~cover.type, scales = "free")+ theme_classic()
 
 #let's fit some models
-lm1 <- glm(temp~as.factor(shape)* as.factor (cover.type)+as.factor(timeblock), data = data.final, family="gaussian")
+lm1 <- glm(temp~as.factor(microsite)* as.factor (cover.type), data = shelter.shrub.open, family="gaussian")
 summary (lm1)
 library (emmeans)
 anova(lm1, test = "Chisq")#all varibles are significant
-emmeans(lm1, pairwise~shape|cover.type*timeblock)
+emmeans(lm1, pairwise~microsite|cover.type)
 
 
-lm2 <- glm(Intensity~as.factor(shape)*as.factor(cover.type)+as.factor(timeblock), data = data.final, family="poisson")
+lm2 <- glm(intensity~as.factor(microsite)* as.factor(cover.type), data = shelter.shrub.open, family="quasipoisson")
 summary(lm2) 
 anova (lm2, test="Chisq")#all variables are significant
-emmeans(lm2, pairwise~shape|cover.type*timeblock)
+emmeans(lm2, pairwise~microsite|cover.type)
 
 
 anova1 <- aov (temp~cover.type*timeblock, data.final)
@@ -143,6 +143,18 @@ summary (anova4)
 #Summary 
 
 
+
+```
+```{r}
+#explore light and temp relationship
+correlation<-cor.test(macro.micro.contrast$temp, macro.micro.contrast$intensity, method= "kendall")
+summary(correlation)#light and temp are correlated p<0.05
+#kendall's tau=0.281
+
+#create scatterplot for the above relationship 
+ggplot(macro.micro.contrast, aes(temp, intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  theme_classic()#Perhaps too dense too look at
+
+ggplot(macro.micro.contrast, aes(temp, intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  facet_grid(~microsite)+ theme_classic()
 
 ```
 
