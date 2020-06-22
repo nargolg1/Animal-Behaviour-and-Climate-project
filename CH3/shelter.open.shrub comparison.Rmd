@@ -51,6 +51,7 @@ ggplot (panoche.climate.2019, aes((hour), radiation)) + geom_smooth() + xlab("Ho
 
 ggplot (panoche.climate.2019, aes((day), radiation)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (W/m²)")+  theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))#sunlight experinced over the the study period
 
+
 library (ggbeeswarm)
 ggplot (panoche.climate.2019, aes(as.factor(date), air.temp)) + geom_boxplot() + xlab("Date") + ylab ("Temperature (°C)")+ geom_quasirandom(alpha=0.05)+ theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))+ theme(axis.text.x = element_text(angle = 90))+ geom_smooth(se=FALSE, color="black", aes(group=1))#daily air temperature averages
 
@@ -73,8 +74,17 @@ ggplot(shelter.shrub.open, aes((microsite), intensity, fill=microsite)) + geom_b
 
 ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
 
-ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + geom_smooth() + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+geom_smooth()
 
+library(ggpubr)
+
+ggline(shelter.shrub.open, x = "day", y = "temp", color = "microsite",
+ add = "mean", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Microsite", legend="right")#dotted line graph of mean daily temperatures
+
+ggline(shelter.shrub.open, x = "day", y = "intensity", color = "microsite",
+ add = "mean", shape = "microsite", legend.title= "Microsite", xlab = "Day", ylab = "Solar Radiation (lum/ft²)", legend="right")#dotted line graph of mean daily solar radiation 
+  
+  
 #visualizing mean, median, and mode with histograms
 ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
          geom_histogram(binwidth = 5) +
@@ -87,7 +97,7 @@ ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
 
 ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
          geom_density() +
-  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+labs(fill = "Microsite")
+  scale_fill_brewer(palette = "Set1")+  labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+labs(fill = "Microsite")
 
 ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
          geom_density() +
@@ -144,21 +154,20 @@ anova(lm.intensity, test = "Chisq")
 emmeans(lm.temp, pairwise~microsite)
 emmeans (lm.intensity, pairwise~microsite)
 
-#let's look at shape and blockage intensity more closely
-lm.intensity.cover <- glm(intensity~as.factor(microsite)* as.factor(cover.type), data = shelter.shrub.open, family="quasipoisson")
-summary(lm.intensity.cover) 
-anova (lm.intensity.cover, test="Chisq")#all variables are significant
-emmeans(lm.intensity.cover, pairwise~microsite|cover.type)# square-triangle different at 15% and 90%
-
-
+#let's look at shape and blockage more closely
 lm.temp.cover <- glm(temp~as.factor(microsite)* as.factor(cover.type), data = shelter.shrub.open, family="gaussian")
 summary(lm.temp.cover) 
 anova (lm.temp.cover, test="Chisq")#all variables are significant
 emmeans(lm.temp.cover, pairwise~microsite|cover.type)# square-triangle different at 15% and 90%
 
+
 ```
+
+
+
 ```{r}
 #calculating Relative Interaction Index (RII)
+
 
 #turn table into wide format
 data.wide.temp <- reshape (shelter.shrub.open, timevar = "microsite", v.names = "temp", direction = "wide", idvar="date")
@@ -184,7 +193,7 @@ y <- select(rii.temp.triangle, rii_calc_triangle)
 z <- select(rii.temp.square, rii_calc_square)
 rii.final.temp<-cbind(x, y, z)
 
-rii.csv <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/RII.microsite.csv")
+rii.csv<- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/RII.microsite.csv")
 
 ggplot(rii.csv, aes(Microsite, rii)) +
   geom_boxplot()+ ylab("Relative Interaction Index (RII)")+ geom_hline(yintercept=0, linetype="dashed", color = "red")+ theme_classic()
@@ -194,6 +203,19 @@ ggplot(rii.csv, aes(rii, fill = Microsite)) +
   geom_vline(xintercept = 0, col = 2, lty = 2) +
   labs(x = "Relative Interaction Index (RII)", y = "Frequency", fill = "") +
   scale_fill_brewer(palette = "Paired")+ theme_classic()
+
+ggline (rii.csv, x="Microsite", y= "rii", add = "mean_se", ylab = "Relative Interaction Index (RII)", xlab = "Microsite")
+
+#GLM for RII
+summary (rii.csv)
+
+lm.rii <- glm(rii~as.factor(Microsite), data = rii.csv, family="gaussian")
+summary(lm.rii) 
+anova (lm.rii, test="Chisq")
+emmeans(lm.rii, pairwise~Microsite)#no significant difference
+library(sjPlot)
+tab_model(lm.rii)
+
 ```
 
 
@@ -227,13 +249,16 @@ ggplot(shelter.shrub.open, aes(x = as.factor(day), y = intensity)) +
 #MACRO-MICRO CLIMATE CONTRAST
 ##test between macro-climate and micro-climate
 
-
 library (ggplot2)
 library(sjPlot)
 ggplot(macro.micro.contrast, aes((microsite), temp, fill=microsite)) + geom_boxplot() + xlab("Site") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+theme(axis.text.x = element_text(angle = 90))+ theme(axis.title.x=element_blank(),
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+ labs(fill = "Site")+ stat_summary(fun.y=mean, colour="black", geom="point", shape=18, size=3,show_guide = FALSE)
 #weather station data are significantly differnt from shrub, open, and square.
+
+ggline(macro.micro.contrast, x = "day", y = "temp", color = "microsite",
+ add = "mean", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Site", legend="right")
+
 
 lm.site <- glm(temp~as.factor(microsite), data = macro.micro.contrast, family="gaussian")
 summary (lm.site)
@@ -242,13 +267,18 @@ library (emmeans)
 anova(lm.site, test = "Chisq")
 emmeans(lm.site, pairwise~microsite)
 
+ggplot(macro.micro.contrast, aes(temp, fill = microsite)) +
+         geom_histogram(binwidth = 5) +
+  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
+
+
 ```
 
 ```{r}
 #Create microsite map for appendix
 library(ggmap)
 register_google(key="AIzaSyBpfKtYrkYVS3LEJSjV1cIHeYrxJPsPX4U")
-panoche <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 16, maptype = "satellite")
+panoche <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 11, maptype = "roadmap")
 lat_long <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/Shrub_Shelter_Open lat long.csv")
 na.omit(lat_long)
 
@@ -263,10 +293,10 @@ ggmap(panoche) +
 ```{r}
 #CONCLUSIONS
 
-##1.Temperature and sunlight intensity are correlated.
-##2.Shelters function similar to shrubs when lowering temperature and light.
-##3.Triangle at 90% is best at loweting both parameters.
+##1.Temperature and sunlight intensity are positively related.
+##2.Shelters function similar to shrubs, but square emulates shrub slightly better. 
+##3.Triangle at 90% blockage is best at lowering temperature. 
 ##4.The open experienced the most variation. 
-##5.Weather station data were different square, shrub, and the open. 
+##5. Temperature from Weather station data were significantly lower than square, shrub, and the open- weather-station data is nor ecologically-relevant. 
 
 ```
