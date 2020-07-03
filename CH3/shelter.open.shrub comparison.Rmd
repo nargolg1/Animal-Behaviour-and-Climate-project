@@ -55,6 +55,7 @@ ggplot (panoche.climate.2019, aes((day), radiation)) + geom_smooth() + xlab("Day
 library (ggbeeswarm)
 ggplot (panoche.climate.2019, aes(as.factor(date), air.temp)) + geom_boxplot() + xlab("Date") + ylab ("Temperature (°C)")+ geom_quasirandom(alpha=0.05)+ theme_classic()+ theme(axis.text=element_text(size=12))+ theme(axis.text=element_text(size=12))+ theme(axis.text.x = element_text(angle = 90))+ geom_smooth(se=FALSE, color="black", aes(group=1))#daily air temperature averages
 
+
 ```
 
 ```{r}
@@ -72,19 +73,22 @@ ggplot(shelter.shrub.open, aes((microsite), intensity, fill=microsite)) + geom_b
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+ labs(fill = "Microsite")+ stat_summary(fun.y=mean, colour="black", geom="point", shape=18, size=3,show_guide = FALSE)#Boxplot light intensity by microsite
 
-ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))
+ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ theme(legend.position = "none") + facet_grid("microsite")
 
-ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+geom_smooth()
+
+ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+geom_smooth()+ stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ theme(legend.position = "none") + facet_grid("microsite")
+
 
 library(ggpubr)
 
 ggline(shelter.shrub.open, x = "day", y = "temp", color = "microsite",
- add = "mean", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Microsite", legend="right")#dotted line graph of mean daily temperatures
+ add = "mean_ci", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Microsite", legend="right")#dotted line graph of mean daily temperatures
+
 
 ggline(shelter.shrub.open, x = "day", y = "intensity", color = "microsite",
- add = "mean", shape = "microsite", legend.title= "Microsite", xlab = "Day", ylab = "Solar Radiation (lum/ft²)", legend="right")#dotted line graph of mean daily solar radiation 
+ add = "mean_ci", shape = "microsite", legend.title= "Microsite", xlab = "Day", ylab = "Solar Radiation (lum/ft²)", legend="right")#dotted line graph of mean daily solar radiation 
   
-  
+
 #visualizing mean, median, and mode with histograms
 ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
          geom_histogram(binwidth = 5) +
@@ -102,6 +106,7 @@ ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
 ggplot(shelter.shrub.open, aes(temp, fill = microsite)) +
          geom_density() +
   scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
+
 
 ``` 
 
@@ -130,6 +135,7 @@ ggplot(macro.micro.contrast, aes(temp, intensity))+ geom_point()+ ylab("Light In
 ggplot(macro.micro.contrast, aes(temp, intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  facet_grid(~microsite)+ theme_classic()#faceted by microsite
 
 ggplot(macro.micro.contrast, aes(temp, intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  facet_grid(~cover.type)+ theme_classic()#faceted by cover type
+
 
 ```
 
@@ -257,7 +263,11 @@ ggplot(macro.micro.contrast, aes((microsite), temp, fill=microsite)) + geom_boxp
 #weather station data are significantly differnt from shrub, open, and square.
 
 ggline(macro.micro.contrast, x = "day", y = "temp", color = "microsite",
- add = "mean", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Site", legend="right")
+ add = "mean_ci", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Site", legend="right")
+
+
+ggline(macro.micro.contrast, x = "day", y = "intensity", color = "microsite",
+ add = "mean_ci", shape = "microsite", xlab = "Day", ylab = "Solar Rdation (lum/ft²)", legend.title= "Site", legend="right")
 
 
 lm.site <- glm(temp~as.factor(microsite), data = macro.micro.contrast, family="gaussian")
@@ -267,10 +277,36 @@ library (emmeans)
 anova(lm.site, test = "Chisq")
 emmeans(lm.site, pairwise~microsite)
 
+lm.site.sun <- glm(intensity~as.factor(microsite), data = macro.micro.contrast, family="gaussian")
+summary (lm.site.sun)
+tab_model(lm.site.sun)
+library (emmeans)
+anova(lm.site.sun, test = "Chisq")
+emmeans(lm.site.sun, pairwise~microsite)
+
+
+
 ggplot(macro.micro.contrast, aes(temp, fill = microsite)) +
          geom_histogram(binwidth = 5) +
   scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
 
+ggplot(macro.micro.contrast, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ facet_grid("microsite")+ theme(legend.position = "none")
+
+ggplot(macro.micro.contrast, aes((day), intensity, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Solar Rdation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ facet_grid("microsite")+ theme(legend.position = "none")
+
+
+library(car)
+leveneTest(temp ~ microsite, macro.micro.contrast)
+leveneTest(intensity ~microsite, macro.micro.contrast)
+#variation in sunlight and intensity are significant
+
+
+wide.clim <- reshape(macro.micro.contrast, v.names="temp", timevar="microsite", idvar=c("temp", "microsite"),
+        direction="wide")
+summary(wide.clim)
+
+wide.clim.sun <- reshape(macro.micro.contrast, v.names="intensity", timevar="microsite", idvar=c("temp", "microsite"), direction="wide")
+summary (wide.clim.sun)
 
 ```
 
@@ -278,13 +314,22 @@ ggplot(macro.micro.contrast, aes(temp, fill = microsite)) +
 #Create microsite map for appendix
 library(ggmap)
 register_google(key="AIzaSyBpfKtYrkYVS3LEJSjV1cIHeYrxJPsPX4U")
-panoche <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 11, maptype = "roadmap")
+panoche1 <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 6, maptype = "satellite")
+
+
+panoche2 <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 12, maptype = "terrain")
+
+
 lat_long <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/Shrub_Shelter_Open lat long.csv")
 na.omit(lat_long)
 
-ggmap(panoche) +
+ggmap(panoche2) +
   geom_point(data= lat_long, aes(x=Long, y=Lat, color = Microsite), alpha = 6/10, size =2, show.legend = TRUE) +
   labs(title = "Map of Shelters and Shrubs", x = "Longitude", y = "Latitude")
+
+ggmap(panoche1) +
+  geom_point(data= lat_long, aes(x=Long, y=Lat, color = Microsite), alpha = 6/10, size =2, show.legend = TRUE) +
+  labs(title = "Map of Califronia", x = "Longitude", y = "Latitude")
 #Very general arial view of microsites
 
 ```
