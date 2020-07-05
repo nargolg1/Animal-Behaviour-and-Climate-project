@@ -73,20 +73,19 @@ ggplot(shelter.shrub.open, aes((microsite), intensity, fill=microsite)) + geom_b
         axis.text.x=element_blank(),
         axis.ticks.x=element_blank())+ labs(fill = "Microsite")+ stat_summary(fun.y=mean, colour="black", geom="point", shape=18, size=3,show_guide = FALSE)#Boxplot light intensity by microsite
 
-ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ theme(legend.position = "none") + facet_grid("microsite")
+ggplot(shelter.shrub.open, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ labs(color="Microsite", shape= "Microsite")
 
 
-ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+geom_smooth()+ stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ theme(legend.position = "none") + facet_grid("microsite")
+ggplot(shelter.shrub.open, aes((day), intensity, color=microsite)) + xlab("Day") + ylab ("Solar Radiation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+geom_smooth()+ stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ labs(color="Microsite", shape= "Microsite")
 
 
 library(ggpubr)
-
 ggline(shelter.shrub.open, x = "day", y = "temp", color = "microsite",
- add = "mean_ci", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Microsite", legend="right")#dotted line graph of mean daily temperatures
+ add = "mean_se", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Microsite", legend="right")#dotted line graph of mean daily temperatures
 
 
 ggline(shelter.shrub.open, x = "day", y = "intensity", color = "microsite",
- add = "mean_ci", shape = "microsite", legend.title= "Microsite", xlab = "Day", ylab = "Solar Radiation (lum/ft²)", legend="right")#dotted line graph of mean daily solar radiation 
+ add = "mean_se", shape = "microsite", legend.title= "Microsite", xlab = "Day", ylab = "Solar Radiation (lum/ft²)", legend="right")#dotted line graph of mean daily solar radiation 
   
 
 #visualizing mean, median, and mode with histograms
@@ -122,6 +121,8 @@ hist(shelter.shrub.open$temp)
 ggqqplot(shelter.shrub.open$intensity)#Data follow a poisson distribution
 hist(shelter.shrub.open$intensity)
 #Neither intensity nor temperature follow a normal distribution
+
+
 ```
 ```{r}
 #explore light and temperature relationship
@@ -129,10 +130,19 @@ macro.micro.contrast <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behavio
 
 cor.test(macro.micro.contrast$temp, macro.micro.contrast$intensity, method = "kendall")#light and temperature are correlated p<0.0001, tau=0.2813
 
+
+lm.corr <- glm(temp~intensity*microsite, data = macro.micro.contrast, family="gaussian")
+summary (lm.corr)
+library(sjPlot)
+tab_model(lm.corr)
+
+
+
 #scatterplot for the relationship
 ggplot(macro.micro.contrast, aes(temp, intensity))+ geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+theme_classic()#Perhaps too dense too look at
 
 ggplot(macro.micro.contrast, aes(temp, intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  facet_grid(~microsite)+ theme_classic()#faceted by microsite
+
 
 ggplot(macro.micro.contrast, aes(temp, intensity))+geom_point()+ ylab("Light Intensity (lum/ft²)")+ xlab("Temperature (°F)")+geom_smooth(method='glm', se=FALSE)+  facet_grid(~cover.type)+ theme_classic()#faceted by cover type
 
@@ -153,7 +163,7 @@ library (emmeans)
 anova(lm.temp, test = "Chisq")
 emmeans1 <- emmeans(lm.temp, pairwise~microsite)
 
-lm.intensity <- glm(intensity~as.factor(microsite), data=shelter.shrub.open, family = "quasipoisson")
+lm.intensity <- glm(intensity~as.factor(microsite), data=shelter.shrub.open, family = "gaussian")
 summary (lm.intensity)
 tab_model(lm.intensity)
 anova(lm.intensity, test = "Chisq")
@@ -262,12 +272,13 @@ ggplot(macro.micro.contrast, aes((microsite), temp, fill=microsite)) + geom_boxp
         axis.ticks.x=element_blank())+ labs(fill = "Site")+ stat_summary(fun.y=mean, colour="black", geom="point", shape=18, size=3,show_guide = FALSE)
 #weather station data are significantly differnt from shrub, open, and square.
 
+
 ggline(macro.micro.contrast, x = "day", y = "temp", color = "microsite",
- add = "mean_ci", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Site", legend="right")
+ add = "mean_se", shape = "microsite", xlab = "Day", ylab = "Temperature (°F)", legend.title= "Site", legend="right")
 
 
 ggline(macro.micro.contrast, x = "day", y = "intensity", color = "microsite",
- add = "mean_ci", shape = "microsite", xlab = "Day", ylab = "Solar Rdation (lum/ft²)", legend.title= "Site", legend="right")
+ add = "mean_se", shape = "microsite", xlab = "Day", ylab = "Solar Rdation (lum/ft²)", legend.title= "Site", legend="right")
 
 
 lm.site <- glm(temp~as.factor(microsite), data = macro.micro.contrast, family="gaussian")
@@ -277,7 +288,7 @@ library (emmeans)
 anova(lm.site, test = "Chisq")
 emmeans(lm.site, pairwise~microsite)
 
-lm.site.sun <- glm(intensity~as.factor(microsite), data = macro.micro.contrast, family="gaussian")
+lm.site.sun <- glm(intensity~as.factor(microsite), data = macro.micro.contrast, family="poisson")
 summary (lm.site.sun)
 tab_model(lm.site.sun)
 library (emmeans)
@@ -285,25 +296,25 @@ anova(lm.site.sun, test = "Chisq")
 emmeans(lm.site.sun, pairwise~microsite)
 
 
-
 ggplot(macro.micro.contrast, aes(temp, fill = microsite)) +
          geom_histogram(binwidth = 5) +
-  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)+ facet_grid(~microsite)+theme(legend.position = "none")
+  scale_fill_brewer(palette = "Set1")+   labs(fill = "", x = "Temperature (°F)", y = "Frequency")+theme_classic()+ theme(axis.text=element_text(size=12))+ stat_central_tendency(aes(color = microsite), type = "mean", color="green", linetype = 2)+ stat_central_tendency(type = "median", color = "blue", linetype = 2)
 
-ggplot(macro.micro.contrast, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ facet_grid("microsite")+ theme(legend.position = "none")
+ggplot(macro.micro.contrast, aes((day), temp, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Temperature (°F)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ 
+labs(color="Site", shape= "Site") 
 
-ggplot(macro.micro.contrast, aes((day), intensity, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Solar Rdation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ facet_grid("microsite")+ theme(legend.position = "none")
+ggplot(macro.micro.contrast, aes((day), intensity, color=microsite)) + geom_smooth()+ xlab("Day") + ylab ("Solar Rdation (lum/ft²)")+ theme_classic()+ theme(axis.text=element_text(size=12))+stat_summary(fun.y=max, geom="point", size=2, aes(shape = microsite))+ 
+labs(color="Site", shape= "Site")
 
 
 library(car)
 leveneTest(temp ~ microsite, macro.micro.contrast)
 leveneTest(intensity ~microsite, macro.micro.contrast)
-#variation in sunlight and intensity are significant
+#variation in sunlight intensity and temperature between groups is significant
 
 
 wide.clim <- reshape(macro.micro.contrast, v.names="temp", timevar="microsite", idvar=c("temp", "microsite"),
         direction="wide")
-summary(wide.clim)
 
 wide.clim.sun <- reshape(macro.micro.contrast, v.names="intensity", timevar="microsite", idvar=c("temp", "microsite"), direction="wide")
 summary (wide.clim.sun)
@@ -317,7 +328,7 @@ register_google(key="AIzaSyBpfKtYrkYVS3LEJSjV1cIHeYrxJPsPX4U")
 panoche1 <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 6, maptype = "satellite")
 
 
-panoche2 <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 12, maptype = "terrain")
+panoche2 <- get_map(location = c(lon = -120.7932, lat = 36.69363), zoom = 16, maptype = "terrain")
 
 
 lat_long <- read.csv("C:/Users/Nargol Ghazian/Desktop/Animal-Behaviour-and-Climate-project/CH3/Shrub_Shelter_Open lat long.csv")
@@ -325,11 +336,11 @@ na.omit(lat_long)
 
 ggmap(panoche2) +
   geom_point(data= lat_long, aes(x=Long, y=Lat, color = Microsite), alpha = 6/10, size =2, show.legend = TRUE) +
-  labs(title = "Map of Shelters and Shrubs", x = "Longitude", y = "Latitude")
+  labs(title = "Map of Shelters and Shrubs at Panoche", x = "Longitude", y = "Latitude")
 
 ggmap(panoche1) +
   geom_point(data= lat_long, aes(x=Long, y=Lat, color = Microsite), alpha = 6/10, size =2, show.legend = TRUE) +
-  labs(title = "Map of Califronia", x = "Longitude", y = "Latitude")
+  labs(title = "Map of Califronia", x = "Longitude", y = "Latitude")+ theme(legend.position = "none")
 #Very general arial view of microsites
 
 ```
@@ -341,7 +352,8 @@ ggmap(panoche1) +
 ##1.Temperature and sunlight intensity are positively related.
 ##2.Shelters function similar to shrubs, but square emulates shrub slightly better. 
 ##3.Triangle at 90% blockage is best at lowering temperature. 
-##4.The open experienced the most variation. 
-##5. Temperature from Weather station data were significantly lower than square, shrub, and the open- weather-station data is nor ecologically-relevant. 
+##4.Shrub, square and triangle experienced similar variation. 
+##5. Temperature from Weather station data were significantly lower than square, shrub, and the open.
+##6. Sunlight variation in from weather station was the greatest. 
 
 ```
